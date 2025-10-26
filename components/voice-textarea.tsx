@@ -107,10 +107,10 @@ export function VoiceTextarea({
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={cn(minHeight, "pr-12", className)}
+        className={cn(minHeight, className)}
         disabled={isRecording || isTranscribing}
       />
-      <div className="absolute right-2 bottom-2 flex items-center gap-1">
+      <div className="absolute right-2 bottom-2 flex items-center gap-1 z-10">
         {isTranscribing ? (
           <div className="flex items-center gap-1 text-[10px] text-muted-foreground bg-background px-2 py-1 rounded-lg">
             <Loader2 className="h-3 w-3 animate-spin" />

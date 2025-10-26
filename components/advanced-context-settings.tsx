@@ -363,48 +363,48 @@ ${ctx.generalMemory}
           <Settings2 className="h-3.5 w-3.5 stroke-[1.5]" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] p-0">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border/40">
-          <DialogTitle className="text-base font-light tracking-tight flex items-center gap-2">
-            <Brain className="h-4 w-4" />
+      <DialogContent className="max-w-4xl max-h-[90vh] md:max-h-[85vh] p-0 w-[95vw] md:w-full">
+        <DialogHeader className="px-4 md:px-6 pt-4 md:pt-6 pb-3 md:pb-4 border-b border-border/40">
+          <DialogTitle className="text-sm md:text-base font-light tracking-tight flex items-center gap-2">
+            <Brain className="h-3.5 md:h-4 w-3.5 md:w-4" />
             Context Management
           </DialogTitle>
-          <DialogDescription className="text-[11px] font-light">
+          <DialogDescription className="text-[10px] md:text-[11px] font-light">
             Manage all aspects of your life. Alpha will remember everything you add here.
           </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="general" className="flex-1">
-          <div className="px-6 pt-4">
-            <TabsList className="grid grid-cols-6 w-full h-auto p-1 bg-accent/30">
-              <TabsTrigger value="general" className="text-[10px] py-1.5 data-[state=active]:bg-background">
-                <Brain className="h-3 w-3 mr-1" />
-                General
+          <div className="px-3 md:px-6 pt-3 md:pt-4">
+            <TabsList className="grid grid-cols-3 md:grid-cols-6 w-full h-auto p-0.5 md:p-1 bg-accent/30 gap-0.5">
+              <TabsTrigger value="general" className="text-[9px] md:text-[10px] py-1 md:py-1.5 data-[state=active]:bg-background flex items-center justify-center gap-0.5 md:gap-1">
+                <Brain className="h-2.5 md:h-3 w-2.5 md:w-3" />
+                <span className="hidden sm:inline">General</span>
               </TabsTrigger>
-              <TabsTrigger value="exams" className="text-[10px] py-1.5 data-[state=active]:bg-background">
-                <GraduationCap className="h-3 w-3 mr-1" />
-                Exams
+              <TabsTrigger value="exams" className="text-[9px] md:text-[10px] py-1 md:py-1.5 data-[state=active]:bg-background flex items-center justify-center gap-0.5 md:gap-1">
+                <GraduationCap className="h-2.5 md:h-3 w-2.5 md:w-3" />
+                <span className="hidden sm:inline">Exams</span>
               </TabsTrigger>
-              <TabsTrigger value="stacia" className="text-[10px] py-1.5 data-[state=active]:bg-background">
-                <Briefcase className="h-3 w-3 mr-1" />
-                Stacia
+              <TabsTrigger value="stacia" className="text-[9px] md:text-[10px] py-1 md:py-1.5 data-[state=active]:bg-background flex items-center justify-center gap-0.5 md:gap-1">
+                <Briefcase className="h-2.5 md:h-3 w-2.5 md:w-3" />
+                <span className="hidden sm:inline">Stacia</span>
               </TabsTrigger>
-              <TabsTrigger value="other" className="text-[10px] py-1.5 data-[state=active]:bg-background">
-                <Briefcase className="h-3 w-3 mr-1" />
-                Other
+              <TabsTrigger value="other" className="text-[9px] md:text-[10px] py-1 md:py-1.5 data-[state=active]:bg-background flex items-center justify-center gap-0.5 md:gap-1">
+                <Briefcase className="h-2.5 md:h-3 w-2.5 md:w-3" />
+                <span className="hidden sm:inline">Other</span>
               </TabsTrigger>
-              <TabsTrigger value="mockello" className="text-[10px] py-1.5 data-[state=active]:bg-background">
-                <Rocket className="h-3 w-3 mr-1" />
-                Mockello
+              <TabsTrigger value="mockello" className="text-[9px] md:text-[10px] py-1 md:py-1.5 data-[state=active]:bg-background flex items-center justify-center gap-0.5 md:gap-1">
+                <Rocket className="h-2.5 md:h-3 w-2.5 md:w-3" />
+                <span className="hidden sm:inline">Mockello</span>
               </TabsTrigger>
-              <TabsTrigger value="hitroo" className="text-[10px] py-1.5 data-[state=active]:bg-background">
-                <Sparkles className="h-3 w-3 mr-1" />
-                Hitroo
+              <TabsTrigger value="hitroo" className="text-[9px] md:text-[10px] py-1 md:py-1.5 data-[state=active]:bg-background flex items-center justify-center gap-0.5 md:gap-1">
+                <Sparkles className="h-2.5 md:h-3 w-2.5 md:w-3" />
+                <span className="hidden sm:inline">Hitroo</span>
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <ScrollArea className="h-[50vh] px-6 py-4">
+          <ScrollArea className="h-[55vh] md:h-[50vh] px-3 md:px-6 py-3 md:py-4">
             {/* General Memory */}
             <TabsContent value="general" className="space-y-4 mt-0">
               <div className="space-y-2">
@@ -645,25 +645,25 @@ ${ctx.generalMemory}
           </ScrollArea>
         </Tabs>
 
-        <div className="px-6 py-4 border-t border-border/40 flex justify-between items-center">
-          <p className="text-[10px] text-muted-foreground/60 font-light">
-            All changes are saved to both MongoDB and localStorage
+        <div className="px-3 md:px-6 py-3 md:py-4 border-t border-border/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-0">
+          <p className="text-[9px] md:text-[10px] text-muted-foreground/60 font-light">
+            All changes saved to MongoDB & localStorage
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full md:w-auto">
             <Button
               variant="ghost"
               onClick={() => setOpen(false)}
-              className="text-[11px] font-light h-8"
+              className="text-[10px] md:text-[11px] font-light h-7 md:h-8 flex-1 md:flex-initial"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="text-[11px] font-light h-8 gap-2"
+              className="text-[10px] md:text-[11px] font-light h-7 md:h-8 gap-1.5 md:gap-2 flex-1 md:flex-initial"
             >
-              <Save className="h-3 w-3 stroke-[1.5]" />
-              {saving ? 'Saving...' : 'Save All Context'}
+              <Save className="h-2.5 md:h-3 w-2.5 md:w-3 stroke-[1.5]" />
+              {saving ? 'Saving...' : 'Save Context'}
             </Button>
           </div>
         </div>

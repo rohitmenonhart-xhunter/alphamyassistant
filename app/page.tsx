@@ -3,10 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Plus, Menu, Sparkles, MessageSquare, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { AdvancedContextSettings } from "@/components/advanced-context-settings";
+import { VoiceTextarea } from "@/components/voice-textarea";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
@@ -716,26 +716,29 @@ export default function Home() {
         <div className="border-t border-border/40 bg-background/80 backdrop-blur-sm">
           <div className="max-w-2xl mx-auto px-3 md:px-6 py-3 md:py-4">
             <form onSubmit={handleSubmit} className="relative">
-              <Textarea
-                ref={textareaRef}
+              <VoiceTextarea
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type a message..."
-                className="min-h-[44px] max-h-[160px] resize-none pr-11 text-[13px] font-light border-border/30 focus-visible:ring-1 focus-visible:ring-ring/50 rounded-2xl bg-accent/20 placeholder:text-muted-foreground/40 transition-all duration-200"
-                rows={1}
+                onChange={(value) => setInput(value)}
+                placeholder="Type a message or click mic to record..."
+                className="text-[13px] font-light border-border/30 focus-visible:ring-1 focus-visible:ring-ring/50 rounded-2xl bg-accent/20 placeholder:text-muted-foreground/40 transition-all duration-200 pr-20"
+                minHeight="min-h-[44px]"
+                onEnterPress={() => {
+                  if (input.trim()) {
+                    handleSubmit(new Event('submit') as any);
+                  }
+                }}
               />
               <Button
                 type="submit"
                 size="icon"
                 disabled={!input.trim()}
-                className="absolute right-1.5 bottom-1.5 h-7 w-7 rounded-xl transition-all duration-200 disabled:opacity-30"
+                className="absolute right-12 bottom-1.5 h-7 w-7 rounded-xl transition-all duration-200 disabled:opacity-30"
               >
                 <Send className="h-3 w-3 stroke-[1.5]" />
               </Button>
             </form>
             <p className="text-[9px] text-muted-foreground/40 text-center mt-2 font-light">
-              ⏎ Send · ⇧⏎ New line
+              ⏎ Send · ⇧⏎ New line · 🎤 Click mic to record
             </p>
           </div>
         </div>
