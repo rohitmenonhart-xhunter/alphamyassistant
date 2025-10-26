@@ -6,6 +6,12 @@ export const dynamic = 'force-dynamic';
 // GET all conversations
 export async function GET() {
   try {
+    // Check if MongoDB URI is configured
+    if (!process.env.MONGODB_URI) {
+      console.error('MONGODB_URI is not set in environment variables');
+      return NextResponse.json({ conversations: [] });
+    }
+
     const client = await clientPromise;
     const db = client.db('alpha');
     
@@ -18,10 +24,9 @@ export async function GET() {
     return NextResponse.json({ conversations });
   } catch (error: any) {
     console.error('Error fetching conversations:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch conversations' },
-      { status: 500 }
-    );
+    console.error('Error details:', error.message);
+    // Return empty array to allow app to work with localStorage
+    return NextResponse.json({ conversations: [] });
   }
 }
 
