@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useRef, useEffect } from "react";
 import { Send, Plus, Menu, Sparkles, MessageSquare, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { AdvancedContextSettings } from "@/components/advanced-context-settings";
 import { VoiceTextarea } from "@/components/voice-textarea";
+import { AuthLock } from "@/components/auth-lock";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
@@ -570,7 +573,8 @@ export default function Home() {
   );
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <AuthLock>
+      <div className="flex h-screen bg-background overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-56 border-r border-border/40 flex-col backdrop-blur-sm">
         <SidebarContent />
@@ -744,5 +748,6 @@ export default function Home() {
         </div>
       </main>
     </div>
+    </AuthLock>
   );
 }
