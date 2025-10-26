@@ -27,6 +27,116 @@ interface Conversation {
   updatedAt: Date;
 }
 
+// Helper function to generate system prompt from context
+const generateSystemPromptFromContext = (ctx: any): string => {
+  const now = new Date();
+  const dateOptions: Intl.DateTimeFormatOptions = { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  
+  const currentDate = now.toLocaleDateString('en-US', dateOptions);
+  const currentTime = now.toLocaleTimeString('en-US', timeOptions);
+  const currentDateTime = `${currentDate} at ${currentTime}`;
+  
+  let prompt = `You are Alpha, the personal assistant of Rohit. Your purpose is to help Rohit plan, organize, and tackle everything in his life with the context provided below.
+
+**CURRENT DATE & TIME:**
+${currentDateTime}
+
+**IMPORTANT:** Always consider the current date and time when:
+- Planning schedules and timelines
+- Calculating days/weeks until deadlines
+- Suggesting what to do today/this week
+- Estimating preparation time needed
+- Prioritizing urgent vs non-urgent tasks
+
+**Your Role:**
+- Guide and plan everything ahead for Rohit
+- Provide strategic advice considering all commitments
+- Help prioritize tasks based on urgency and importance
+- Be proactive, supportive, and motivating
+- Always consider the full context AND current date/time when providing recommendations
+
+---
+
+`;
+
+  if (ctx.generalMemory) {
+    prompt += `**GENERAL MEMORY:**
+${ctx.generalMemory}
+
+---
+
+`;
+  }
+
+  // Exams Section
+  if (ctx.exams?.subjects || ctx.exams?.dates || ctx.exams?.preparationStatus || ctx.exams?.notes) {
+    prompt += `**ARREAR EXAMS:**
+`;
+    if (ctx.exams.subjects) prompt += `Subjects: ${ctx.exams.subjects}\n`;
+    if (ctx.exams.dates) prompt += `Exam Dates: ${ctx.exams.dates}\n`;
+    if (ctx.exams.preparationStatus) prompt += `Preparation Status: ${ctx.exams.preparationStatus}\n`;
+    if (ctx.exams.notes) prompt += `Notes: ${ctx.exams.notes}\n`;
+    prompt += `\n---\n\n`;
+  }
+
+  // Stacia Work Section
+  if (ctx.staciaWork?.currentProjects || ctx.staciaWork?.deadlines || ctx.staciaWork?.priorities || ctx.staciaWork?.notes) {
+    prompt += `**STACIA WORK:**
+`;
+    if (ctx.staciaWork.currentProjects) prompt += `Current Projects: ${ctx.staciaWork.currentProjects}\n`;
+    if (ctx.staciaWork.deadlines) prompt += `Deadlines: ${ctx.staciaWork.deadlines}\n`;
+    if (ctx.staciaWork.priorities) prompt += `Priorities: ${ctx.staciaWork.priorities}\n`;
+    if (ctx.staciaWork.notes) prompt += `Notes: ${ctx.staciaWork.notes}\n`;
+    prompt += `\n---\n\n`;
+  }
+
+  // Other Work Section
+  if (ctx.otherWork?.projects || ctx.otherWork?.deadlines || ctx.otherWork?.notes) {
+    prompt += `**OTHER WORK COMMITMENTS:**
+`;
+    if (ctx.otherWork.projects) prompt += `Projects: ${ctx.otherWork.projects}\n`;
+    if (ctx.otherWork.deadlines) prompt += `Deadlines: ${ctx.otherWork.deadlines}\n`;
+    if (ctx.otherWork.notes) prompt += `Notes: ${ctx.otherWork.notes}\n`;
+    prompt += `\n---\n\n`;
+  }
+
+  // Mockello Section
+  if (ctx.mockello?.features || ctx.mockello?.deadlines || ctx.mockello?.status || ctx.mockello?.notes) {
+    prompt += `**MOCKELLO STARTUP:**
+`;
+    if (ctx.mockello.features) prompt += `Features/Products: ${ctx.mockello.features}\n`;
+    if (ctx.mockello.deadlines) prompt += `Deadlines: ${ctx.mockello.deadlines}\n`;
+    if (ctx.mockello.status) prompt += `Current Status: ${ctx.mockello.status}\n`;
+    if (ctx.mockello.notes) prompt += `Notes: ${ctx.mockello.notes}\n`;
+    prompt += `\n---\n\n`;
+  }
+
+  // Hitroo Section
+  if (ctx.hitroo?.features || ctx.hitroo?.deadlines || ctx.hitroo?.status || ctx.hitroo?.notes) {
+    prompt += `**HITROO STARTUP:**
+`;
+    if (ctx.hitroo.features) prompt += `Features/Products: ${ctx.hitroo.features}\n`;
+    if (ctx.hitroo.deadlines) prompt += `Deadlines: ${ctx.hitroo.deadlines}\n`;
+    if (ctx.hitroo.status) prompt += `Current Status: ${ctx.hitroo.status}\n`;
+    if (ctx.hitroo.notes) prompt += `Notes: ${ctx.hitroo.notes}\n`;
+    prompt += `\n---\n\n`;
+  }
+
+  prompt += `Based on all the above context, provide strategic advice, actionable plans, and help Rohit manage his time effectively. Always consider his energy levels, deadlines, and long-term goals.`;
+
+  return prompt;
+};
+
 const DEFAULT_SYSTEM_PROMPT = `You are Alpha, the personal assistant of Rohit. Your purpose is to help Rohit plan, organize, and tackle everything in his life with the context provided below.
 
 **About Rohit:**
@@ -78,13 +188,44 @@ export default function Home() {
     }
   }, [messages]);
 
-  // Load conversations and system prompt on mount
+  // Load conversations, context, and system prompt on mount
   useEffect(() => {
     const loadData = async () => {
-      // Load system prompt
-      const savedPrompt = localStorage.getItem("alpha-system-prompt");
-      if (savedPrompt) {
-        setSystemPrompt(savedPrompt);
+      // Load context from MongoDB and generate system prompt
+      try {
+        const contextResponse = await fetch('/api/context');
+        if (contextResponse.ok) {
+          const contextData = await contextResponse.json();
+          if (contextData.context) {
+            // Save to localStorage
+            localStorage.setItem('alpha-context', JSON.stringify(contextData.context));
+            
+            // Generate system prompt from context
+            const generatedPrompt = generateSystemPromptFromContext(contextData.context);
+            setSystemPrompt(generatedPrompt);
+            localStorage.setItem('alpha-system-prompt', generatedPrompt);
+            console.log('System prompt loaded from MongoDB context');
+          } else {
+            // Fallback to saved system prompt
+            const savedPrompt = localStorage.getItem("alpha-system-prompt");
+            if (savedPrompt) {
+              setSystemPrompt(savedPrompt);
+            }
+          }
+        } else {
+          // Fallback to localStorage
+          const savedPrompt = localStorage.getItem("alpha-system-prompt");
+          if (savedPrompt) {
+            setSystemPrompt(savedPrompt);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load context from server:', error);
+        // Fallback to localStorage
+        const savedPrompt = localStorage.getItem("alpha-system-prompt");
+        if (savedPrompt) {
+          setSystemPrompt(savedPrompt);
+        }
       }
 
       // Load conversations from MongoDB
